@@ -20,24 +20,32 @@ function nearestSearch(_x, _y) {
   var nearestStation = 0;
   var nearestDistance = 0;
 
+  var distArr = [];
+
   for (let i = 0; i < stations.length; i++) {
     var distance = Math.pow(stations[i][0] - _x, 2) + Math.pow(stations[i][1] - _y, 2);
+
     distance = parseFloat(Math.sqrt(distance));
+    nearestStation = i;
 
-    // console.log("i", i, "x", Math.pow(stations[i][0] - _x, 2), "y", Math.pow(stations[i][1] - _y, 2), "dist", distance);
-
-    if (i == 0) {
-      nearestDistance = distance;
-      nearestStation = i;
-    }
-
-    if (distance < nearestDistance) {
-      nearestDistance = distance;
-      nearestStation = i;
-    }
+    distArr.push({ distance, nearestStation });
   }
 
-  return { nearestStation, nearestDistance };
+  distArr = distArr.sort(function(a, b) {
+    return a.distance > b.distance ? 1 : a.distance < b.distance ? -1 : 0;
+  });
+
+  //
+  let stationList = [];
+
+  for (let i = 0; i < 3; i++) {
+    stationList.push(distArr[i].nearestStation);
+  }
+
+  stationList.sort();
+  //
+
+  return { nearestStation, nearestDistance, stationList };
 }
 
 module.exports = (_x, _y) => {

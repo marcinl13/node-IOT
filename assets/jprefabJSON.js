@@ -1,5 +1,5 @@
 const armaagParsed = require("./armaagParsed");
-const choosenStations2 = require("./chooseStations");
+const choosenStationsList = require("./chooseStations");
 
 let obj = {
   temperature: 0,
@@ -20,8 +20,6 @@ let averageArr = arr => {
   return sum / arr.length;
 };
 
-//add checking triangle from cords position
-
 module.exports = (req, res, next) => {
   let latitude = req.params.latitude ? req.params.latitude : 0;
   let longitude = req.params.longitude ? req.params.longitude : 0;
@@ -38,7 +36,7 @@ module.exports = (req, res, next) => {
   }
 
   let hourElem = 48 + parseInt(curTime);
-  let choosenStations = [];
+  let choosenStationsID = [0, 4, 8];
 
   /**
    * add code to check stations is near by coords
@@ -48,32 +46,33 @@ module.exports = (req, res, next) => {
    *
    */
 
-  const choose_Stations = choosenStations2(latitude, longitude);
-  choosenStations.push(parseInt(choose_Stations.nearestStation));
+  const choose_Stations = choosenStationsList(latitude, longitude);
+  // choosenStationsID.push(parseInt(choose_Stations.nearestStation)); //1
+  choosenStationsID = choose_Stations.stationList;
 
-  for (let i = 0; i < choosenStations.length; i++) {
-    var stationData = armaagData.document.station[choosenStations[i]].substance;
+  for (let i = 0; i < choosenStationsID.length; i++) {
+    var stationData = armaagData.document.station[choosenStationsID[i]].substance;
     var buffer = [];
     var stationDataFromHour = 0;
 
     for (let j = 0; j < stationData.length; j++) {
       if (stationData[j]._attributes.type == "WILG") {
-        buffer = armaagData.document.station[choosenStations[i]].substance[3]["_text"].split("|");
+        buffer = armaagData.document.station[choosenStationsID[i]].substance[3]["_text"].split("|");
 
         stationDataFromHour = buffer[hourElem];
 
-        humidity.push(stationDataFromHour);
+        humidity.push(parseFloat(stationDataFromHour));
 
         //reset
         buffer = [];
         stationDataFromHour = 0;
       }
       if (stationData[j]._attributes.type == "TEMP") {
-        buffer = armaagData.document.station[choosenStations[i]].substance[2]["_text"].split("|");
+        buffer = armaagData.document.station[choosenStationsID[i]].substance[2]["_text"].split("|");
 
         stationDataFromHour = buffer[hourElem];
 
-        temperature.push(stationDataFromHour);
+        temperature.push(parseFloat(stationDataFromHour));
 
         //reset
         buffer = [];
@@ -86,7 +85,7 @@ module.exports = (req, res, next) => {
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
 
   // triangle or closest
-  if (choosenStations.length > 1) {
+  if (choosenStationsID.length > 1) {
     obj.type = modelTypes.model;
   } else {
     obj.type = modelTypes.closest;
