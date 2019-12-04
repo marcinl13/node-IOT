@@ -47,7 +47,6 @@ module.exports = (req, res, next) => {
    */
 
   const choose_Stations = choosenStationsList(latitude, longitude);
-  // choosenStationsID.push(parseInt(choose_Stations.nearestStation)); //1
   choosenStationsID = choose_Stations.stationList;
 
   for (let i = 0; i < choosenStationsID.length; i++) {

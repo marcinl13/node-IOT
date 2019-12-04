@@ -17,9 +17,6 @@ let stations = [
 ];
 
 function nearestSearch(_x, _y) {
-  var nearestStation = 0;
-  var nearestDistance = 0;
-
   var distArr = [];
 
   for (let i = 0; i < stations.length; i++) {
@@ -45,7 +42,7 @@ function nearestSearch(_x, _y) {
   stationList.sort();
   //
 
-  return { nearestStation, nearestDistance, stationList };
+  return { stationList };
 }
 
 module.exports = (_x, _y) => {
