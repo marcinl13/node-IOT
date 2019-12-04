@@ -1,8 +1,7 @@
 const armaagParsed = require("./armaagParsed");
+const choosenStations2 = require("./chooseStations");
 
 let obj = {
-  lat: 1,
-  long: 1,
   temperature: 0,
   humidity: 0,
   type: ""
@@ -30,6 +29,7 @@ module.exports = (req, res, next) => {
   let temperature = [];
   let humidity = [];
 
+  let armaagData = armaagParsed();
   let curTime = new Date().getHours();
 
   //24 first elem
@@ -37,32 +37,53 @@ module.exports = (req, res, next) => {
     curTime = 0;
   }
 
-  let choosenStations = [0];
   let hourElem = 48 + parseInt(curTime);
-
+  let choosenStations = [];
 
   /**
-   * add code to check stations is near by coords 
-   * 
+   * add code to check stations is near by coords
+   *
    * if yes then add to choosenStations elem of those
    * else the nearest
-   * 
+   *
    */
 
-  for (let i = 0; i < choosenStations.length; i++) {
-    var splited = armaagParsed().document.station[choosenStations[i]].substance[2]["_text"].split("|"); //temp
-    var hourVal = splited[hourElem];
-    temperature.push(hourVal);
+  const choose_Stations = choosenStations2(latitude, longitude);
+  choosenStations.push(parseInt(choose_Stations.nearestStation));
 
-    splited = armaagParsed().document.station[choosenStations[i]].substance[3]["_text"].split("|"); //wilg
-    hourVal = splited[hourElem];
-    humidity.push(hourVal);
+  for (let i = 0; i < choosenStations.length; i++) {
+    var stationData = armaagData.document.station[choosenStations[i]].substance;
+    var buffer = [];
+    var stationDataFromHour = 0;
+
+    for (let j = 0; j < stationData.length; j++) {
+      if (stationData[j]._attributes.type == "WILG") {
+        buffer = armaagData.document.station[choosenStations[i]].substance[3]["_text"].split("|");
+
+        stationDataFromHour = buffer[hourElem];
+
+        humidity.push(stationDataFromHour);
+
+        //reset
+        buffer = [];
+        stationDataFromHour = 0;
+      }
+      if (stationData[j]._attributes.type == "TEMP") {
+        buffer = armaagData.document.station[choosenStations[i]].substance[2]["_text"].split("|");
+
+        stationDataFromHour = buffer[hourElem];
+
+        temperature.push(stationDataFromHour);
+
+        //reset
+        buffer = [];
+        stationDataFromHour = 0;
+      }
+    }
   }
 
-  obj.lat = latitude;
-  obj.long = longitude;
-  obj.humidity = averageArr(humidity);
-  obj.temperature = averageArr(temperature);
+  obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
+  obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
 
   // triangle or closest
   if (choosenStations.length > 1) {
