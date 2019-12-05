@@ -48,7 +48,6 @@ module.exports = (lat, long, _armagData) => {
       curStation.forEach((ce, ci) => {
         var splited = [];
         var chooseHourFromSplitted = 0;
-        
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
@@ -69,6 +68,10 @@ module.exports = (lat, long, _armagData) => {
   obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
   obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
+
+  if (obj.temperature < 0 || obj.temperature > 300) {
+    return new Error("Brak danych");
+  }
 
   return obj;
 };
