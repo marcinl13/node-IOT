@@ -23,7 +23,9 @@ let averageArr = arr => {
 module.exports = (lat, long, _armagData) => {
   let convertedArmag = JSON.parse(convert.xml2json(_armagData, { compact: true, spaces: 2 }));
 
-  let curTime = new Date().getHours();
+  let curTime = new Date();
+  curTime = curTime.getHours() - curTime.getTimezoneOffset() / 60;
+
   let temperature = [];
   let humidity = [];
 
