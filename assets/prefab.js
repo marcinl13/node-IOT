@@ -34,6 +34,8 @@ module.exports = (lat, long, _armagData) => {
   console.log("lat, long", lat, long);
 
   var choosenStationsID = choosenStations(lat, long).stationList || [];
+  
+  choosenStationsID = choosenStationsID.sort();
 
   console.log("choosenStationsID", choosenStationsID);
 
@@ -47,6 +49,8 @@ module.exports = (lat, long, _armagData) => {
 
     if (curStation) {
       curStation.forEach((ce, ci) => {
+        console.log(ce);
+
         var splited = [];
         var chooseHourFromSplitted = 0;
 
