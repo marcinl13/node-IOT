@@ -39,14 +39,12 @@ function nearestSearch(_x, _y) {
     stationList.push(distArr[i].nearestStation);
   }
 
-  stationList.sort();
-  //
+  stationList = stationList.sort();
 
   return { stationList };
 }
 
 module.exports = (_x, _y) => {
-
   //nearest
   return nearestSearch(_x, _y);
 };

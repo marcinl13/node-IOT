@@ -46,18 +46,24 @@ module.exports = (lat, long, _armagData) => {
     var curStation = armagEntity[e].substance;
 
     if (curStation) {
-      curStation.forEach((e, i) => {
+      curStation.forEach((ce, ci) => {
         var splited = [];
         var chooseHourFromSplitted = 0;
 
-        if (e._attributes.type == "WILG") {
-          splited = e._text.split("|");
+        if (ce._attributes.type == "WILG") {
+          console.log("WILG");
+          console.log(ce._text.split("|")[hourElem]);
+
+          splited = ce._text.split("|");
           chooseHourFromSplitted = parseFloat(splited[hourElem]);
 
           humidity.push(chooseHourFromSplitted);
         }
-        if (e._attributes.type == "TEMP") {
-          splited = e._text.split("|");
+        if (ce._attributes.type == "TEMP") {
+          console.log("TEMP");
+          console.log(ce._text.split("|")[hourElem]);
+
+          splited = ce._text.split("|");
           chooseHourFromSplitted = parseFloat(splited[hourElem]);
 
           temperature.push(chooseHourFromSplitted);
