@@ -34,9 +34,6 @@ module.exports = (lat, long, _armagData) => {
   console.log("lat, long", lat, long);
 
   var choosenStationsID = choosenStations(lat, long).stationList || [];
-  
-  choosenStationsID = choosenStationsID.sort();
-
   console.log("choosenStationsID", choosenStationsID);
 
   var armagEntity = convertedArmag.document.station;
