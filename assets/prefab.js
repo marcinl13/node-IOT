@@ -23,13 +23,14 @@ let averageArr = arr => {
 module.exports = (lat, long, _armagData) => {
   let convertedArmag = JSON.parse(convert.xml2json(_armagData, { compact: true, spaces: 2 }));
 
-  let curTime = new Date();
-  let currentTimeZoneOffsetInHours = curTime.getTimezoneOffset() / 60;
-  curTime = curTime.getHours() - currentTimeZoneOffsetInHours;
+  let curDate = new Date();
+  let currentTimeZoneOffsetInHours = curDate.getTimezoneOffset() / 60;
+  let curHours = curDate.getHours();
+  let curTime = curHours - currentTimeZoneOffsetInHours;
 
-  console.log("curTime1", currentTimeZoneOffsetInHours);
-  console.log("curTime2", curTime.getHours());
-  console.log("curTime3", curTime);
+  console.log("curTime1 ", currentTimeZoneOffsetInHours);
+  console.log("curTime2 ", curHours);
+  console.log("curTime3 ", curTime);
 
   let temperature = [];
   let humidity = [];
