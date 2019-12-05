@@ -49,6 +49,8 @@ module.exports = (lat, long, _armagData) => {
         var splited = [];
         var chooseHourFromSplitted = 0;
 
+        console.log(ce);
+
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
           chooseHourFromSplitted = parseFloat(splited[hourElem]);
