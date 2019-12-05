@@ -43,7 +43,7 @@ function nearestSearch(_x, _y) {
     return a > b;
   });
 
-  return { stationList };
+  return stationList;
 }
 
 module.exports = (_x, _y) => {
