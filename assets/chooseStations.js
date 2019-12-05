@@ -4,11 +4,11 @@ let stations = [
   [0, 0], //Gdańsk Nowy port [54.398016, 18.665872]  no data
   [54.56266, 18.48892], //Gdynia Pogorze
   [54.32884, 18.55559], //Gdańsk Szadołki
-  [54.43333, 18.5811], //Sopot Dolny Taras
+  [54.43333, 18.5811], //Sopot
   [54.37875, 18.61947], //Gdańsk Wrzeszcz
   [54.46696, 18.4634], //Gdynia Środ
   [53.96914, 18.517212], //Starogard Gdański
-  [0, 0], //Kwidzyn no data
+  [53.7263529, 18.9323043], //Kwidzyn 
   [54.464298, 17.03126], //Słupsk
   [0, 0], //Kościerzyna  no data
   [54.035091, 19.048571], //Malbork
