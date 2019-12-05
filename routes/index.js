@@ -24,14 +24,14 @@ router.get("/:latitude/:longitude", (req, res, next) => {
       response.on("end", function() {
         var result = prefab(latitude, longitude, data);
 
-        if (result.temperature > 300) {
-          res.status(400);
-          res.send("Brak Danych")
-        } else {
-          res.status(200);
-          res.send(result);
-        }
-        
+        res.send(result);
+        // if (result.temperature > 300) {
+        //   res.status(400);
+        //   res.send("Brak Danych")
+        // } else {
+        //   res.status(200);
+        //   res.send(result);
+        // }
       });
     }
   });
