@@ -24,10 +24,11 @@ module.exports = (lat, long, _armagData) => {
   let convertedArmag = JSON.parse(convert.xml2json(_armagData, { compact: true, spaces: 2 }));
 
   let curTime = new Date();
-  curTime = curTime.getHours() - curTime.getTimezoneOffset() / 60;
+  let currentTimeZoneOffsetInHours = curTime.getTimezoneOffset() / 60;
+  curTime = curTime.getHours() - currentTimeZoneOffsetInHours;
 
-  console.log("curTime1", curTime.getTimezoneOffset() / 60);
-  console.log("curTime2", curTime.curTime.getHours());
+  console.log("curTime1", currentTimeZoneOffsetInHours);
+  console.log("curTime2", curTime.getHours());
   console.log("curTime3", curTime);
 
   let temperature = [];
