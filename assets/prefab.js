@@ -26,7 +26,9 @@ module.exports = (lat, long, _armagData) => {
   let curTime = new Date();
   curTime = curTime.getHours() - curTime.getTimezoneOffset() / 60;
 
-  console.log("curTime", curTime);
+  console.log("curTime1", curTime.getTimezoneOffset() / 60);
+  console.log("curTime2", curTime.curTime.getHours());
+  console.log("curTime3", curTime);
 
   let temperature = [];
   let humidity = [];
