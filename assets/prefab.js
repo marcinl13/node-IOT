@@ -31,23 +31,17 @@ module.exports = (lat, long, _armagData) => {
     curTime = 0;
   }
 
-  console.log("lat, long", lat, long);
-
   var choosenStationsID = choosenStations(lat, long).stationList || [];
   console.log("choosenStationsID", choosenStationsID);
 
   var armagEntity = convertedArmag.document.station;
   let hourElem = 48 + parseInt(curTime);
 
-  console.log("hourElem", hourElem);
-
   choosenStationsID.forEach((e, i) => {
     var curStation = armagEntity[e].substance;
 
     if (curStation) {
       curStation.forEach((ce, ci) => {
-        console.log(ce);
-
         var splited = [];
         var chooseHourFromSplitted = 0;
 
@@ -66,8 +60,6 @@ module.exports = (lat, long, _armagData) => {
       });
     }
   });
-
-  console.log("hum & temp", humidity, temperature);
 
   obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
