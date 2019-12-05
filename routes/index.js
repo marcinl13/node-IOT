@@ -4,7 +4,6 @@ const https = require("https");
 const router = express.Router();
 const prefab = require("../assets/prefab");
 
-
 /** GET coords
  * Latitude N/S
  * Longitude E/W
@@ -23,10 +22,16 @@ router.get("/:latitude/:longitude", (req, res, next) => {
         data += data_.toString();
       });
       response.on("end", function() {
-        
         var result = prefab(latitude, longitude, data);
 
-        res.send(result);
+        if (result.temperature > 300) {
+          res.status(400);
+          res.send("Brak Danych")
+        } else {
+          res.status(200);
+          res.send(result);
+        }
+        
       });
     }
   });
