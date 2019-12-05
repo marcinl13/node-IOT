@@ -27,7 +27,7 @@ module.exports = (lat, long, _armagData) => {
   curTime = curTime.getHours() - curTime.getTimezoneOffset() / 60;
 
   console.log("curTime", curTime);
-  
+
   let temperature = [];
   let humidity = [];
 
@@ -35,7 +35,7 @@ module.exports = (lat, long, _armagData) => {
     curTime = 0;
   }
 
-  var choosenStationsID = choosenStations(lat, long).stationList || [];
+  var choosenStationsID = choosenStations(lat, long);
   console.log("choosenStationsID", choosenStationsID);
 
   var armagEntity = convertedArmag.document.station;
