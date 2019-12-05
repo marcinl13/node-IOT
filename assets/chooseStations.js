@@ -43,6 +43,8 @@ function nearestSearch(_x, _y) {
     return a > b;
   });
 
+  console.log("stationList", stationList);
+
   return stationList;
 }
 
