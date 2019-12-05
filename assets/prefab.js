@@ -69,9 +69,7 @@ module.exports = (lat, long, _armagData) => {
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
   obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
 
-  if (obj.temperature < -300 || obj.temperature > 300) {
-    return new Error("Brak danych");
-  }
+  if (obj.temperature < -300 || obj.temperature > 300) return new Error("Brak danych");
 
   return obj;
 };
