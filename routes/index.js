@@ -15,12 +15,12 @@ router.get("/:latitude/:longitude", (req, res, next) => {
   let longitude = req.params.longitude ? req.params.longitude : 0;
 
   var data = "";
-  https.get("https://armaag.gda.pl/data/xml/weather_wszystko2.xml", function(res) {
-    if (res.statusCode >= 200 && res.statusCode < 400) {
-      res.on("data", function(data_) {
+  https.get("https://armaag.gda.pl/data/xml/weather_wszystko2.xml", function(response) {
+    if (response.statusCode >= 200 && response.statusCode < 400) {
+      response.on("data", function(data_) {
         data += data_.toString();
       });
-      res.on("end", function() {
+      response.on("end", function() {
         var result = prefab(latitude, longitude, data);
 
         res.send(result);
