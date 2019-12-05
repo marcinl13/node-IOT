@@ -40,7 +40,7 @@ function nearestSearch(_x, _y) {
   }
 
   let sortedStation = stationList.sort(function(a, b) {
-    return a > b;
+    return a - b;
   });
 
   console.log("stationList", sortedStation);
