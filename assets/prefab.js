@@ -52,18 +52,12 @@ module.exports = (lat, long, _armagData) => {
         var chooseHourFromSplitted = 0;
 
         if (ce._attributes.type == "WILG") {
-          console.log("WILG");
-          console.log(ce._text.split("|")[hourElem]);
-
           splited = ce._text.split("|");
           chooseHourFromSplitted = parseFloat(splited[hourElem]);
 
           humidity.push(chooseHourFromSplitted);
         }
         if (ce._attributes.type == "TEMP") {
-          console.log("TEMP");
-          console.log(ce._text.split("|")[hourElem]);
-
           splited = ce._text.split("|");
           chooseHourFromSplitted = parseFloat(splited[hourElem]);
 
