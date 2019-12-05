@@ -39,9 +39,7 @@ function nearestSearch(_x, _y) {
     stationList.push(distArr[i].nearestStation);
   }
 
-  let sortedStation = stationList.sort(function(a, b) {
-    return a - b;
-  });
+  let sortedStation = stationList.sort((a, b) => a - b);
 
   console.log("stationList", sortedStation);
 
