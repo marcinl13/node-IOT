@@ -48,6 +48,7 @@ module.exports = (lat, long, _armagData) => {
       curStation.forEach((ce, ci) => {
         var splited = [];
         var chooseHourFromSplitted = 0;
+        
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
