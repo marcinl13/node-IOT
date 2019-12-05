@@ -11,8 +11,10 @@ const prefab = require("../assets/prefab");
  */
 
 router.get("/:latitude/:longitude", (req, res, next) => {
-  let latitude = req.params.latitude ? req.params.latitude : 0;
-  let longitude = req.params.longitude ? req.params.longitude : 0;
+  let latitude = req.params.latitude ? parseFloat(req.params.latitude) : 0;
+  let longitude = req.params.longitude ? parseFloat(req.params.longitude) : 0;
+
+  console.log(latitude, longitude);
 
   var data = "";
   https.get("https://armaag.gda.pl/data/xml/weather_wszystko2.xml", function(response) {
@@ -21,6 +23,7 @@ router.get("/:latitude/:longitude", (req, res, next) => {
         data += data_.toString();
       });
       response.on("end", function() {
+        
         var result = prefab(latitude, longitude, data);
 
         res.send(result);

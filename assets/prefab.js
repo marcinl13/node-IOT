@@ -31,30 +31,42 @@ module.exports = (lat, long, _armagData) => {
     curTime = 0;
   }
 
+  console.log("lat, long", lat, long);
+
   var choosenStationsID = choosenStations(lat, long).stationList || [];
+
+  console.log("choosenStationsID", choosenStationsID);
+
   var armagEntity = convertedArmag.document.station;
   let hourElem = 48 + parseInt(curTime);
+
+  console.log("hourElem", hourElem);
 
   choosenStationsID.forEach((e, i) => {
     var curStation = armagEntity[e].substance;
 
     if (curStation) {
       curStation.forEach((e, i) => {
+        var splited = [];
+        var chooseHourFromSplitted = 0;
+
         if (e._attributes.type == "WILG") {
-          var splitedHum = e._text.split("|");
-          var chooseHourFromSplitted = parseFloat(splitedHum[hourElem]);
+          splited = e._text.split("|");
+          chooseHourFromSplitted = parseFloat(splited[hourElem]);
 
           humidity.push(chooseHourFromSplitted);
         }
         if (e._attributes.type == "TEMP") {
-          var splitedTemp = e._text.split("|");
-          var chooseHourFromSplitted = parseFloat(splitedTemp[hourElem]);
+          splited = e._text.split("|");
+          chooseHourFromSplitted = parseFloat(splited[hourElem]);
 
           temperature.push(chooseHourFromSplitted);
         }
       });
     }
   });
+
+  console.log("hum & temp", humidity, temperature);
 
   obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
