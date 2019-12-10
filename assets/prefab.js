@@ -6,6 +6,8 @@ const INVALID_DATA = -999;
 let obj = {
   temperature: INVALID_DATA,
   humidity: INVALID_DATA,
+  pm25: INVALID_DATA,
+  pm10: INVALID_DATA,
   stations: [],
   type: ""
 };
