@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node --tls-min-v1.0 ./bin/www"
+    "start": "node --tls-min-v1.0 ./index.js"
   },
   "dependencies": {
     "express": "~4.16.0",
-    "http-errors": "~1.6.2",
     "node-fetch": "^2.6.0",
-    "request": "^2.88.0",
     "xml-js": "^1.6.11"
   },
   "author": "Marcin Potrykus"
