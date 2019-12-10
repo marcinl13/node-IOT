@@ -4,6 +4,7 @@ const convert = require("xml-js");
 let getDataJSON = _url => {
   return new Promise((resolve, reject) => {
     var data = "";
+
     https.get(_url, response => {
       if (response.statusCode >= 200 && response.statusCode < 400) {
         response.on("data", data_ => {
