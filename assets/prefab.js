@@ -4,6 +4,7 @@ const choosenStations = require("./chooseStations");
 let obj = {
   temperature: 0,
   humidity: 0,
+  stations: [],
   type: ""
 };
 
@@ -35,8 +36,8 @@ module.exports = (lat, long, _armagData) => {
   }
 
   var choosenStationsID = choosenStations(lat, long);
-  console.log("choosenStationsID", choosenStationsID);
-
+  console.log("choosenStationsID", choosenStationsID); 
+    
   var armagEntity = convertedArmag.document.station;
   let hourElem = 48 + parseInt(curTime);
 
@@ -69,7 +70,8 @@ module.exports = (lat, long, _armagData) => {
   obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
   obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
-
+  obj.stations = choosenStationsID;
+  
   if (obj.temperature < -300 || obj.temperature > 300) return new Error("Brak danych");
 
   return obj;
