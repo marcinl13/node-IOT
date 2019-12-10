@@ -24,9 +24,8 @@ module.exports = (lat, long, _armagData) => {
   let convertedArmag = JSON.parse(convert.xml2json(_armagData, { compact: true, spaces: 2 }));
 
   let curDate = new Date();
-  let currentTimeZoneOffsetInHours = curDate.getTimezoneOffset() / 60;
   let curHours = curDate.getHours();
-  let curTime = curHours - currentTimeZoneOffsetInHours;
+  let curTime = curHours;
 
   let temperature = [];
   let humidity = [];
@@ -53,14 +52,14 @@ module.exports = (lat, long, _armagData) => {
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem]);
-
+          chooseHourFromSplitted = parseFloat(splited[hourElem])<-300 ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
+          
           humidity.push(chooseHourFromSplitted);
         }
         if (ce._attributes.type == "TEMP") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem]);
-
+          chooseHourFromSplitted = parseFloat(splited[hourElem])<-300 ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
+          
           temperature.push(chooseHourFromSplitted);
         }
       });
