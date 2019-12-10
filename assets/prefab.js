@@ -1,6 +1,8 @@
 const convert = require("xml-js");
 const choosenStations = require("./chooseStations");
 
+let INVALID_DATA = -999;
+
 let obj = {
   temperature: 0,
   humidity: 0,
@@ -50,13 +52,13 @@ module.exports = (lat, long, _armagData) => {
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem])<-300 ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
+          chooseHourFromSplitted = parseFloat(splited[hourElem])<INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
           
           humidity.push(chooseHourFromSplitted);
         }
         if (ce._attributes.type == "TEMP") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem])<-300 ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
+          chooseHourFromSplitted = parseFloat(splited[hourElem])<INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
           
           temperature.push(chooseHourFromSplitted);
         }
@@ -69,7 +71,7 @@ module.exports = (lat, long, _armagData) => {
   obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
   obj.stations = choosenStationsID;
   
-  if (obj.temperature < -300 || obj.temperature > 300) return new Error("Brak danych");
+  if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
 
   return obj;
 };
