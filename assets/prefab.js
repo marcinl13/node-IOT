@@ -1,12 +1,13 @@
 const choosenStations = require("./chooseStations");
 
 const INVALID_DATA = -999;
+const DEFAULT_DATA = 0;
 
 let obj = {
-  temperature: INVALID_DATA,
-  humidity: INVALID_DATA,
-  pm25: INVALID_DATA,
-  pm10: INVALID_DATA,
+  temperature: DEFAULT_DATA,
+  humidity: DEFAULT_DATA,
+  pm2_5: [],
+  pm10: [],
   stations: [],
   type: ""
 };
@@ -29,10 +30,7 @@ let averageArr = arr => {
  */
 module.exports = (lat, long, _armagData) => {
   let convertedArmag = _armagData[0];
-  let convertedArmagPM = _armagData[1];
 
-  console.log(_armagData[0], _armagData[1]);
-  return;
   let curDate = new Date();
   let curHours = curDate.getHours();
   let curTime = curHours == 24 ? 0 : curHours;
@@ -47,13 +45,9 @@ module.exports = (lat, long, _armagData) => {
   let choosenStationsID = choosenStations(lat, long);
 
   let armagEntity = convertedArmag.document.station;
-  let armagEntityPM = convertedArmagPM.document.station;
-
-  console.log(convertedArmagPM);
 
   choosenStationsID.forEach((e, i) => {
     let curStation = armagEntity[e].substance;
-    let curStationPM = armagEntityPM[e].substance;
 
     if (curStation) {
       curStation.forEach((ce, ci) => {
@@ -77,32 +71,6 @@ module.exports = (lat, long, _armagData) => {
               : parseFloat(splited[hourElem]);
 
           temperature.push(chooseHourFromSplitted);
-        }
-      });
-    }
-
-    if (curStationPM) {
-      curStationPM.forEach((ce, ci) => {
-        var splited = [];
-        var chooseHourFromSplitted = 0;
-
-        if (ce._attributes.type == "PM25") {
-          splited = ce._text.split("|");
-          chooseHourFromSplitted =
-            parseFloat(splited[hourElem]) <= INVALID_DATA
-              ? parseFloat(splited[hourElem - 1])
-              : parseFloat(splited[hourElem]);
-
-          pm2_5.push(chooseHourFromSplitted);
-        }
-        if (ce._attributes.type == "PM10") {
-          splited = ce._text.split("|");
-          chooseHourFromSplitted =
-            parseFloat(splited[hourElem]) <= INVALID_DATA
-              ? parseFloat(splited[hourElem - 1])
-              : parseFloat(splited[hourElem]);
-
-          pm10.push(chooseHourFromSplitted);
         }
       });
     }
