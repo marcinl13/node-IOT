@@ -1,4 +1,3 @@
-const convert = require("xml-js");
 const choosenStations = require("./chooseStations");
 
 const INVALID_DATA = -999;
@@ -25,27 +24,34 @@ let averageArr = arr => {
   return sum / arr.length;
 };
 
+/**
+ * _armaagData [hum&temp, pm]
+ */
 module.exports = (lat, long, _armagData) => {
-  let convertedArmag = JSON.parse(convert.xml2json(_armagData, { compact: true, spaces: 2 }));
+  let convertedArmag = _armagData[0];
+  let convertedArmagPM = _armagData[1];
 
   let curDate = new Date();
   let curHours = curDate.getHours();
-  let curTime = curHours;
-
-  let temperature = [];
-  let humidity = [];
-
-  if (curTime == 24) {
-    curTime = 0;
-  }
-
-  var choosenStationsID = choosenStations(lat, long);
-    
-  var armagEntity = convertedArmag.document.station;
+  let curTime = curHours == 24 ? 0 : curHours;
   let hourElem = 48 + parseInt(curTime);
 
+  let pm10 = [];
+  let pm2_5 = [];
+
+  let humidity = [];
+  let temperature = [];
+
+  let choosenStationsID = choosenStations(lat, long);
+
+  let armagEntity = convertedArmag.document.station;
+  let armagEntityPM = convertedArmagPM.document.station;
+
+  console.log(convertedArmagPM);
+
   choosenStationsID.forEach((e, i) => {
-    var curStation = armagEntity[e].substance;
+    let curStation = armagEntity[e].substance;
+    let curStationPM = armagEntityPM[e].substance;
 
     if (curStation) {
       curStation.forEach((ce, ci) => {
@@ -54,15 +60,47 @@ module.exports = (lat, long, _armagData) => {
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem])<=INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
-          
+          chooseHourFromSplitted =
+            parseFloat(splited[hourElem]) <= INVALID_DATA
+              ? parseFloat(splited[hourElem - 1])
+              : parseFloat(splited[hourElem]);
+
           humidity.push(chooseHourFromSplitted);
         }
         if (ce._attributes.type == "TEMP") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem])<=INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
-          
+          chooseHourFromSplitted =
+            parseFloat(splited[hourElem]) <= INVALID_DATA
+              ? parseFloat(splited[hourElem - 1])
+              : parseFloat(splited[hourElem]);
+
           temperature.push(chooseHourFromSplitted);
+        }
+      });
+    }
+
+    if (curStationPM) {
+      curStationPM.forEach((ce, ci) => {
+        var splited = [];
+        var chooseHourFromSplitted = 0;
+
+        if (ce._attributes.type == "PM25") {
+          splited = ce._text.split("|");
+          chooseHourFromSplitted =
+            parseFloat(splited[hourElem]) <= INVALID_DATA
+              ? parseFloat(splited[hourElem - 1])
+              : parseFloat(splited[hourElem]);
+
+          pm2_5.push(chooseHourFromSplitted);
+        }
+        if (ce._attributes.type == "PM10") {
+          splited = ce._text.split("|");
+          chooseHourFromSplitted =
+            parseFloat(splited[hourElem]) <= INVALID_DATA
+              ? parseFloat(splited[hourElem - 1])
+              : parseFloat(splited[hourElem]);
+
+          pm10.push(chooseHourFromSplitted);
         }
       });
     }
@@ -70,9 +108,13 @@ module.exports = (lat, long, _armagData) => {
 
   obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
+
+  obj.pm10 = pm10 //.length > 0 ? averageArr(pm10) : 0;
+  obj.pm2_5 = pm2_5 //.length > 0 ? averageArr(pm2_5) : 0;
+
   obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
   obj.stations = choosenStationsID;
-  
+
   if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
 
   return obj;
