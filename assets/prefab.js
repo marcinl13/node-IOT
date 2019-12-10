@@ -56,12 +56,18 @@ module.exports = (lat, long, _armagData) => {
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
+
+          console.log(parseFloat(splited[hourElem]) <= INVALID_DATA);
+          console.log(parseFloat(splited[hourElem - 2]));
+          console.log(parseFloat(splited[hourElem - 1]));
+          console.log(parseFloat(splited[hourElem]));
+
           chooseHourFromSplitted =
             parseFloat(splited[hourElem]) <= INVALID_DATA
               ? parseFloat(splited[hourElem - 1])
               : parseFloat(splited[hourElem]);
 
-          humidity.push(chooseHourFromSplitted);
+          if (chooseHourFromSplitted != INVALID_DATA) humidity.push(chooseHourFromSplitted);
         }
         if (ce._attributes.type == "TEMP") {
           splited = ce._text.split("|");
@@ -70,19 +76,19 @@ module.exports = (lat, long, _armagData) => {
               ? parseFloat(splited[hourElem - 1])
               : parseFloat(splited[hourElem]);
 
-          temperature.push(chooseHourFromSplitted);
+          if (chooseHourFromSplitted != INVALID_DATA) temperature.push(chooseHourFromSplitted);
         }
       });
     }
   });
 
-  obj.humidity = humidity //.length > 0 ? averageArr(humidity) : 0;
-  obj.temperature = temperature //.length > 0 ? averageArr(temperature) : 0;
+  obj.humidity = humidity; //.length > 0 ? averageArr(humidity) : 0;
+  obj.temperature = temperature; //.length > 0 ? averageArr(temperature) : 0;
 
   obj.pm10 = pm10; //.length > 0 ? averageArr(pm10) : 0;
   obj.pm2_5 = pm2_5; //.length > 0 ? averageArr(pm2_5) : 0;
 
-  obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
+  obj.type = humidity.length > 0 ? modelTypes.model : modelTypes.closest;
   obj.stations = choosenStationsID;
 
   if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
