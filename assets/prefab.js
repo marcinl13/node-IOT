@@ -4,8 +4,8 @@ const choosenStations = require("./chooseStations");
 const INVALID_DATA = -999;
 
 let obj = {
-  temperature: 0,
-  humidity: 0,
+  temperature: INVALID_DATA,
+  humidity: INVALID_DATA,
   stations: [],
   type: ""
 };
@@ -52,13 +52,13 @@ module.exports = (lat, long, _armagData) => {
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem])<INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
+          chooseHourFromSplitted = parseFloat(splited[hourElem])<=INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
           
           humidity.push(chooseHourFromSplitted);
         }
         if (ce._attributes.type == "TEMP") {
           splited = ce._text.split("|");
-          chooseHourFromSplitted = parseFloat(splited[hourElem])<INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
+          chooseHourFromSplitted = parseFloat(splited[hourElem])<=INVALID_DATA ? parseFloat(splited[hourElem-1]) : parseFloat(splited[hourElem]);
           
           temperature.push(chooseHourFromSplitted);
         }
