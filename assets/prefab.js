@@ -36,7 +36,6 @@ module.exports = (lat, long, _armagData) => {
   }
 
   var choosenStationsID = choosenStations(lat, long);
-  console.log("choosenStationsID", choosenStationsID); 
     
   var armagEntity = convertedArmag.document.station;
   let hourElem = 48 + parseInt(curTime);
@@ -48,8 +47,6 @@ module.exports = (lat, long, _armagData) => {
       curStation.forEach((ce, ci) => {
         var splited = [];
         var chooseHourFromSplitted = 0;
-
-        console.log(ce);
 
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
