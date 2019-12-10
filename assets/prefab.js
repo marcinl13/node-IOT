@@ -1,7 +1,7 @@
 const convert = require("xml-js");
 const choosenStations = require("./chooseStations");
 
-let INVALID_DATA = -999;
+const INVALID_DATA = -999;
 
 let obj = {
   temperature: 0,
