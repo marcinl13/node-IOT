@@ -76,8 +76,8 @@ module.exports = (lat, long, _armagData) => {
     }
   });
 
-  obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
-  obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
+  obj.humidity = humidity //.length > 0 ? averageArr(humidity) : 0;
+  obj.temperature = temperature //.length > 0 ? averageArr(temperature) : 0;
 
   obj.pm10 = pm10; //.length > 0 ? averageArr(pm10) : 0;
   obj.pm2_5 = pm2_5; //.length > 0 ? averageArr(pm2_5) : 0;
