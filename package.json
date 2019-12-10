@@ -1,7 +1,7 @@
 {
-  "name": "nodeproj",
+  "name": "node-api-iot",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "node --tls-min-v1.0 ./index.js"
   },
