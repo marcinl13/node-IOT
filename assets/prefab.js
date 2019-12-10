@@ -31,6 +31,8 @@ module.exports = (lat, long, _armagData) => {
   let convertedArmag = _armagData[0];
   let convertedArmagPM = _armagData[1];
 
+  console.log(_armagData[0], _armagData[1]);
+  return;
   let curDate = new Date();
   let curHours = curDate.getHours();
   let curTime = curHours == 24 ? 0 : curHours;
@@ -109,8 +111,8 @@ module.exports = (lat, long, _armagData) => {
   obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
   obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
 
-  obj.pm10 = pm10 //.length > 0 ? averageArr(pm10) : 0;
-  obj.pm2_5 = pm2_5 //.length > 0 ? averageArr(pm2_5) : 0;
+  obj.pm10 = pm10; //.length > 0 ? averageArr(pm10) : 0;
+  obj.pm2_5 = pm2_5; //.length > 0 ? averageArr(pm2_5) : 0;
 
   obj.type = choosenStationsID.length > 0 ? modelTypes.model : modelTypes.closest;
   obj.stations = choosenStationsID;
