@@ -6,7 +6,7 @@
     "start": "node --tls-min-v1.0 ./index.js"
   },
   "repository": "https://github.com/marcinl13/node-IOT",
-  "license": "wtfpl",
+  "license": "WTFPL",
   "dependencies": {
     "express": "~4.16.0",
     "node-fetch": "^2.6.0",
