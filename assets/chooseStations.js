@@ -17,13 +17,34 @@ let stations = [
   // [0, 0], //Lębork  no data
 ];
 
+let deg2rad = _deg => {
+  return _deg * (Math.PI / 180);
+};
+
+let getDistanceFromLatLonInKm = (_lat, _long, station) => {
+  var R = 6371;
+
+  let lat2 = station[0];
+  let lon2 = station[1];
+
+  let dLat = deg2rad(lat2 - _lat);
+  let dLon = deg2rad(lon2 - _long);
+
+  let a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(_lat)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  let d = R * c; // Distance in km
+
+  return d;
+};
+
 function nearestSearch(_x, _y) {
   var distArr = [];
 
   for (let i = 0; i < stations.length; i++) {
-    var distance = Math.pow(stations[i][0] - _x, 2) + Math.pow(stations[i][1] - _y, 2);
-
-    distance = parseFloat(Math.sqrt(distance));
+    let distance = getDistanceFromLatLonInKm(_x, _y, stations[i]);
     nearestStation = i;
 
     distArr.push({ distance, nearestStation });
@@ -33,7 +54,6 @@ function nearestSearch(_x, _y) {
     return a.distance > b.distance ? 1 : a.distance < b.distance ? -1 : 0;
   });
 
-  //
   let stationList = [];
 
   for (let i = 0; i < 3; i++) {
