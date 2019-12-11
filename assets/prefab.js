@@ -6,7 +6,6 @@ const DEFAULT_DATA = 0;
 let obj = {
   temperature: DEFAULT_DATA,
   humidity: DEFAULT_DATA,
-  pm2_5: [],
   pm10: [],
   stations: [],
   type: ""
@@ -38,7 +37,6 @@ module.exports = (lat, long, _armagData) => {
   let hourElem = 48 + parseInt(curTime);
 
   let pm10 = [];
-  let pm2_5 = [];
 
   let humidity = [];
   let temperature = [];
@@ -84,16 +82,6 @@ module.exports = (lat, long, _armagData) => {
         var splited = [];
         var chooseHourFromSplitted = 0;
 
-        if (ce._attributes.type == "PM25") {
-          splited = ce._text.split("|");
-
-          chooseHourFromSplitted =
-            parseFloat(splited[hourElem]) <= INVALID_DATA
-              ? parseFloat(splited[hourElem - 1])
-              : parseFloat(splited[hourElem]);
-
-          if (chooseHourFromSplitted != INVALID_DATA) pm2_5.push(chooseHourFromSplitted);
-        }
         if (ce._attributes.type == "PM10") {
           splited = ce._text.split("|");
           chooseHourFromSplitted =
@@ -111,7 +99,6 @@ module.exports = (lat, long, _armagData) => {
   obj.temperature = temperature.length > 1 ? averageArr(temperature) : "";
 
   obj.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
-  obj.pm2_5 = pm2_5.length > 1 ? averageArr(pm2_5) : "";
 
   obj.type = humidity.length > 1 ? modelTypes.model : modelTypes.closest;
   obj.stations = choosenStationsID;
