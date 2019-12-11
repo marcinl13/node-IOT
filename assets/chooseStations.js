@@ -22,7 +22,7 @@ let deg2rad = _deg => {
 };
 
 let getDistanceFromLatLonInKm = (_lat, _long, station) => {
-  var R = 6371;
+  let R = 6371;
 
   let lat2 = station[0];
   let lon2 = station[1];
@@ -40,8 +40,8 @@ let getDistanceFromLatLonInKm = (_lat, _long, station) => {
   return d;
 };
 
-function nearestSearch(_x, _y) {
-  var distArr = [];
+let nearestSearch = (_x, _y) => {
+  let distArr = [];
 
   for (let i = 0; i < stations.length; i++) {
     let distance = getDistanceFromLatLonInKm(_x, _y, stations[i]);
@@ -61,7 +61,7 @@ function nearestSearch(_x, _y) {
   }
 
   return stationList;
-}
+};
 
 module.exports = (_x, _y) => {
   //nearest
