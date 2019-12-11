@@ -30,6 +30,7 @@ let averageArr = arr => {
  */
 module.exports = (lat, long, _armagData) => {
   let convertedArmag = _armagData[0];
+  let convertedArmagPM = _armagData[1]; //pms
 
   let curDate = new Date();
   let curHours = curDate.getHours();
@@ -45,9 +46,11 @@ module.exports = (lat, long, _armagData) => {
   let choosenStationsID = choosenStations(lat, long);
 
   let armagEntity = convertedArmag.document.station;
+  let armagEntityPM = convertedArmagPM.document.station;
 
   choosenStationsID.forEach((e, i) => {
     let curStation = armagEntity[e].substance;
+    let curStationPM = armagEntityPM[e].substance;
 
     if (curStation) {
       curStation.forEach((ce, ci) => {
@@ -75,15 +78,42 @@ module.exports = (lat, long, _armagData) => {
         }
       });
     }
+
+    if (curStationPM) {
+      curStationPM.forEach((ce, ci) => {
+        var splited = [];
+        var chooseHourFromSplitted = 0;
+
+        if (ce._attributes.type == "PM25") {
+          splited = ce._text.split("|");
+
+          chooseHourFromSplitted =
+            parseFloat(splited[hourElem]) <= INVALID_DATA
+              ? parseFloat(splited[hourElem - 1])
+              : parseFloat(splited[hourElem]);
+
+          if (chooseHourFromSplitted != INVALID_DATA) pm2_5.push(chooseHourFromSplitted);
+        }
+        if (ce._attributes.type == "PM10") {
+          splited = ce._text.split("|");
+          chooseHourFromSplitted =
+            parseFloat(splited[hourElem]) <= INVALID_DATA
+              ? parseFloat(splited[hourElem - 1])
+              : parseFloat(splited[hourElem]);
+
+          if (chooseHourFromSplitted != INVALID_DATA) pm10.push(chooseHourFromSplitted);
+        }
+      });
+    }
   });
 
-  obj.humidity = humidity.length > 0 ? averageArr(humidity) : 0;
-  obj.temperature = temperature.length > 0 ? averageArr(temperature) : 0;
+  obj.humidity = humidity.length > 1 ? averageArr(humidity) : "";
+  obj.temperature = temperature.length > 1 ? averageArr(temperature) : "";
 
-  obj.pm10 = pm10; //.length > 0 ? averageArr(pm10) : 0;
-  obj.pm2_5 = pm2_5; //.length > 0 ? averageArr(pm2_5) : 0;
+  obj.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
+  obj.pm2_5 = pm2_5.length > 1 ? averageArr(pm2_5) : "";
 
-  obj.type = humidity.length > 0 ? modelTypes.model : modelTypes.closest;
+  obj.type = humidity.length > 1 ? modelTypes.model : modelTypes.closest;
   obj.stations = choosenStationsID;
 
   if (obj.temperature < INVALID_DATA) return new Error("Brak danych");

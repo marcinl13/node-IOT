@@ -7,7 +7,7 @@ const parseRemoteXML = require("./assets/parseRemoteXML");
 const PORT = 5000;
 
 promises = [
-  parseRemoteXML("https://armaag.gda.pl/data/xml/weather_wszystko2.xml"), // temp & hum
+  parseRemoteXML("https://armaag.gda.pl/data/xml/weather.xml"), // temp & hum
   parseRemoteXML("https://armaag.gda.pl/data/xml/stacje_porownawcze.xml") // pm2.5 & pm10
 ];
 
