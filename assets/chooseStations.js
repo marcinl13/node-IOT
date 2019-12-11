@@ -40,9 +40,7 @@ function nearestSearch(_x, _y) {
     stationList.push(distArr[i].nearestStation);
   }
 
-  let sortedStation = stationList.sort((a, b) => a - b);
-
-  return sortedStation;
+  return distArr;
 }
 
 module.exports = (_x, _y) => {
