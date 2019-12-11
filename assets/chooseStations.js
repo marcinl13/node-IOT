@@ -40,30 +40,25 @@ let getDistanceFromLatLonInKm = (_lat, _long, station) => {
   return d;
 };
 
-let nearestSearch = (_x, _y) => {
-  let distArr = [];
+module.exports = (_x, _y) => {
+  let distanceArr = [];
 
   for (let i = 0; i < stations.length; i++) {
     let distance = getDistanceFromLatLonInKm(_x, _y, stations[i]);
     nearestStation = i;
 
-    distArr.push({ distance, nearestStation });
+    distanceArr.push({ distance, nearestStation });
   }
 
-  distArr = distArr.sort(function(a, b) {
+  distanceArr = distanceArr.sort(function(a, b) {
     return a.distance > b.distance ? 1 : a.distance < b.distance ? -1 : 0;
   });
 
   let stationList = [];
 
   for (let i = 0; i < 3; i++) {
-    stationList.push(distArr[i].nearestStation);
+    stationList.push(distanceArr[i].nearestStation);
   }
 
   return stationList;
-};
-
-module.exports = (_x, _y) => {
-  //nearest
-  return nearestSearch(_x, _y);
 };
