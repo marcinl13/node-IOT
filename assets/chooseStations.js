@@ -40,7 +40,7 @@ function nearestSearch(_x, _y) {
     stationList.push(distArr[i].nearestStation);
   }
 
-  return distArr;
+  return stationList;
 }
 
 module.exports = (_x, _y) => {
