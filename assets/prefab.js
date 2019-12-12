@@ -1,7 +1,7 @@
 const calculate = require("./prepareData");
 
-const INVALID_DATA = -999;
 const DEFAULT_DATA = 0;
+const INVALID_DATA = -999;
 
 let obj = {
   temperature: DEFAULT_DATA,
@@ -16,27 +16,17 @@ let modelTypes = {
   closest: "closest"
 };
 
-let averageArr = arr => {
-  let sum = arr.reduce((a, b) => {
-    return a + b;
-  });
-
-  return sum / arr.length;
-};
-
 /**
  * _armaagData [hum&temp, pm]
  */
 module.exports = (_lat, _long, _armagData) => {
   var { choosenStationsID, pm10, humidity, temperature } = calculate(_lat, _long, _armagData);
 
-  obj.humidity = humidity.length > 1 ? averageArr(humidity) : 0;
-  obj.temperature = temperature.length > 1 ? averageArr(temperature) : 0;
-
-  obj.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
-
-  obj.type = humidity.length > 1 ? modelTypes.model : modelTypes.closest;
+  obj.pm10 = pm10;
+  obj.humidity = humidity;
+  obj.temperature = temperature;
   obj.stations = choosenStationsID;
+  obj.type = choosenStationsID.length > 1 ? modelTypes.model : modelTypes.closest;
 
   if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
 

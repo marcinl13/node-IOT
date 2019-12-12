@@ -1,11 +1,20 @@
 const choosenStations = require("./chooseStations");
 
+const INVALID_DATA = -999;
+
+let averageArr = arr => {
+  let sum = arr.reduce((a, b) => {
+    return a + b;
+  });
+
+  return sum / arr.length;
+};
+
 let getDataFromHour = (_arr, _hour) => {
   let data = 0;
-  let invalidData = -999;
 
   for (let i = 0; i < _arr.length; i++) {
-    if (parseFloat(_arr[_hour - i]) > invalidData) {
+    if (parseFloat(_arr[_hour - i]) > INVALID_DATA) {
       data = parseFloat(_arr[_hour - i]);
     }
   }
@@ -61,6 +70,10 @@ module.exports = (_latitude, _longitude, _data) => {
       }
     }
   });
+
+  humidity = humidity.length > 1 ? averageArr(humidity) : 0;
+  temperature = temperature.length > 1 ? averageArr(temperature) : 0;
+  pm10 = pm10.length > 1 ? averageArr(pm10) : "";
 
   return { choosenStationsID, pm10, humidity, temperature };
 };
