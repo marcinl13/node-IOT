@@ -1,4 +1,4 @@
-const calculate = require("./prepareData");
+const calculateData = require("./prepareData");
 
 const DEFAULT_DATA = 0;
 const INVALID_DATA = -999;
@@ -20,7 +20,7 @@ let modelTypes = {
  * _armaagData [hum&temp, pm]
  */
 module.exports = (_lat, _long, _armagData) => {
-  var { choosenStationsID, pm10, humidity, temperature } = calculate(_lat, _long, _armagData);
+  var { choosenStationsID, pm10, humidity, temperature } = calculateData(_lat, _long, _armagData);
 
   obj.pm10 = pm10;
   obj.humidity = humidity;
