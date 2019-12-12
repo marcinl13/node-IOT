@@ -1,4 +1,3 @@
-const choosenStations = require("./chooseStations");
 const calculate = require("./prepareData");
 
 const INVALID_DATA = -999;
