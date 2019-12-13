@@ -56,5 +56,7 @@ module.exports = (_latitude, _longitude, _data) => {
   responseModel.temperature = temperature.length > 1 ? averageArr(temperature) : 0;
   responseModel.type = "closest";
 
+  // if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
+  
   return responseModel;
 };
