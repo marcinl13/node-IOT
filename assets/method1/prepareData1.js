@@ -23,9 +23,9 @@ module.exports = (_latitude, _longitude, _data) => {
   let curStation = armagEntity[choosenStationsID].substance;
   let curStationPM = armagEntityPM[choosenStationsID].substance;
 
-  let splited = [];
-
   if (curStation) {
+    let splited = [];
+
     curStation.forEach((ce, ci) => {
       if (ce._attributes.type == "WILG") {
         splited = ce._text.split("|");
@@ -51,9 +51,9 @@ module.exports = (_latitude, _longitude, _data) => {
   }
 
   let response = {
-    humidity: humidity.length > 1 ? averageArr(humidity) : 0,
-    temperature: temperature.length > 1 ? averageArr(temperature) : 0,
-    pm10: pm10.length > 1 ? averageArr(pm10) : "",
+    humidity: humidity,
+    temperature: temperature,
+    pm10: pm10,
     stations: choosenStationsID,
     type: "closest"
   };
