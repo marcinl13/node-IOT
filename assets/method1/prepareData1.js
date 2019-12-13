@@ -1,6 +1,8 @@
 let getDataFromHour = require("../getDataFromHour");
 let closestStations = require("./closestStations");
 
+const INVALID_DATA = -999;
+
 module.exports = (_latitude, _longitude, _data) => {
   let convertedArmag = _data[0];
   let convertedArmagPM = _data[1]; //pms
@@ -57,7 +59,7 @@ module.exports = (_latitude, _longitude, _data) => {
     type: "closest"
   };
 
-  // if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
+  if (response.temperature <= INVALID_DATA || response.humidity <= INVALID_DATA) return new Error("Brak danych");
 
   return response;
 };
