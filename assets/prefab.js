@@ -10,7 +10,5 @@ module.exports = (_lat, _long, _armagData) => {
   var posibility2 = calculateData2(_lat, _long, _armagData);
   var posibility3 = calculateData3(_lat, _long, _armagData);
 
-  // if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
-
   return { 0: posibility1, 1: posibility2, 2: posibility3 };
 };
