@@ -1,6 +1,5 @@
-const choosenStations = require("./chooseStations");
-
-const INVALID_DATA = -999;
+const choosenStations = require("../chooseStations");
+const getDataFromHour = require("../getDataFromHour");
 
 let averageArr = arr => {
   let sum = arr.reduce((a, b) => {
@@ -8,18 +7,6 @@ let averageArr = arr => {
   });
 
   return sum / arr.length;
-};
-
-let getDataFromHour = (_arr, _hour) => {
-  let data = 0;
-
-  for (let i = 0; i < _arr.length; i++) {
-    if (parseFloat(_arr[_hour - i]) > INVALID_DATA) {
-      data = parseFloat(_arr[_hour - i]);
-    }
-  }
-
-  return data;
 };
 
 module.exports = (_latitude, _longitude, _data) => {
@@ -75,5 +62,5 @@ module.exports = (_latitude, _longitude, _data) => {
   temperature = temperature.length > 1 ? averageArr(temperature) : 0;
   pm10 = pm10.length > 1 ? averageArr(pm10) : "";
 
-  return { choosenStationsID, pm10, humidity, temperature };
+  return { choosenStationsID, pm10, humidity, temperature, model: "average" };
 };
