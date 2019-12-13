@@ -1,6 +1,6 @@
-const getDataFromHour = require("../getDataFromHour");
-const responseModel = require("../responseModel");
-const closestStations = require("./closestStations");
+let getDataFromHour = require("../getDataFromHour");
+let closestStations = require("./closestStations");
+let averageArr = require("../average");
 
 module.exports = (_latitude, _longitude, _data) => {
   let convertedArmag = _data[0];
@@ -50,6 +50,14 @@ module.exports = (_latitude, _longitude, _data) => {
     }
   }
 
+  let response = {
+    humidity: humidity.length > 1 ? averageArr(humidity) : 0,
+    temperature: temperature.length > 1 ? averageArr(temperature) : 0,
+    pm10: pm10.length > 1 ? averageArr(pm10) : "",
+    stations: choosenStationsID,
+    type: "closest"
+  };
+  // let response
   responseModel.stations = choosenStationsID;
   responseModel.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
   responseModel.humidity = humidity.length > 1 ? averageArr(humidity) : 0;
@@ -57,6 +65,6 @@ module.exports = (_latitude, _longitude, _data) => {
   responseModel.type = "closest";
 
   // if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
-  
-  return responseModel;
+
+  return response;
 };

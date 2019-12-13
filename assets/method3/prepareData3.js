@@ -1,14 +1,6 @@
-const choosenStations = require("../chooseStations");
-const getDataFromHour = require("../getDataFromHour");
-const responseModel = require("../responseModel");
-
-let averageArr = arr => {
-  let sum = arr.reduce((a, b) => {
-    return a + b;
-  });
-
-  return sum / arr.length;
-};
+let choosenStations = require("../chooseStations");
+let getDataFromHour = require("../getDataFromHour");
+let average = require("../average");
 
 module.exports = (_latitude, _longitude, _data) => {
   let convertedArmag = _data[0];
@@ -59,11 +51,13 @@ module.exports = (_latitude, _longitude, _data) => {
     }
   });
 
-  responseModel.stations = choosenStationsID;
-  responseModel.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
-  responseModel.humidity = humidity.length > 1 ? averageArr(humidity) : 0;
-  responseModel.temperature = temperature.length > 1 ? averageArr(temperature) : 0;
-  responseModel.type = "average";
+  let obj = {
+    humidity: humidity.length > 1 ? average(humidity) : 0,
+    temperature: temperature.length > 1 ? average(temperature) : 0,
+    pm10: pm10.length > 1 ? average(pm10) : "",
+    stations: choosenStationsID,
+    type: "average"
+  };
 
-  return responseModel;
+  return obj;
 };

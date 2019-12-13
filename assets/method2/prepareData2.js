@@ -1,7 +1,6 @@
-const stations = require("../stationList");
-const getDataFromHour = require("../getDataFromHour");
-const getLocationTemperature = require("./getLocationTemperature");
-const responseModel = require("../responseModel");
+let stations = require("../stationList");
+let getDataFromHour = require("../getDataFromHour");
+let getLocationTemperature = require("./getLocationTemperature");
 
 let locationMath = _stationCords => {
   return (_stationCords[0] + _stationCords[1]) / 2;
@@ -65,11 +64,13 @@ module.exports = (_latitude, _longitude, _data) => {
     }
   });
 
-  responseModel.stations = choosenStationsID;
-  responseModel.pm10 = getLocationTemperature(locations3, pm10, point);
-  responseModel.humidity = getLocationTemperature(locations2, humidity, point);
-  responseModel.temperature = getLocationTemperature(locations, temperature, point);
-  responseModel.type = "model";
+  let response = {
+    humidity: getLocationTemperature(locations2, humidity, point),
+    temperature: getLocationTemperature(locations, temperature, point),
+    pm10: getLocationTemperature(locations3, pm10, point),
+    stations: choosenStationsID,
+    type: "model"
+  };
 
-  return responseModel;
+  return response;
 };
