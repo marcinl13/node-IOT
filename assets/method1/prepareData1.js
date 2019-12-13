@@ -1,6 +1,5 @@
 let getDataFromHour = require("../getDataFromHour");
 let closestStations = require("./closestStations");
-let averageArr = require("../average");
 
 module.exports = (_latitude, _longitude, _data) => {
   let convertedArmag = _data[0];
