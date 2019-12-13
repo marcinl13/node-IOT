@@ -1,6 +1,6 @@
 {
   "name": "node-api-iot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "scripts": {
     "start": "node --tls-min-v1.0 ./index.js"
