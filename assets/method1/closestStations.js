@@ -1,4 +1,5 @@
 const stationList = require("../stationList");
+const haversine = require("../method3/haversine");
 
 let closestStations = (_latitude, _longitude, _stationList) => {
   let stationsDistances = [];
