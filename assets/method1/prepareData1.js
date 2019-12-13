@@ -57,12 +57,6 @@ module.exports = (_latitude, _longitude, _data) => {
     stations: choosenStationsID,
     type: "closest"
   };
-  // let response
-  responseModel.stations = choosenStationsID;
-  responseModel.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
-  responseModel.humidity = humidity.length > 1 ? averageArr(humidity) : 0;
-  responseModel.temperature = temperature.length > 1 ? averageArr(temperature) : 0;
-  responseModel.type = "closest";
 
   // if (obj.temperature < INVALID_DATA) return new Error("Brak danych");
 
