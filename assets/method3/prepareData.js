@@ -1,38 +1,36 @@
-const stations = require("../stationList");
+const choosenStations = require("../chooseStations");
 const getDataFromHour = require("../getDataFromHour");
-const getLocationTemperature = require("./getLocationTemperature");
 const responseModel = require("../responseModel");
 
-let locationMath = _stationCords => {
-  return (_stationCords[0] + _stationCords[1]) / 2;
+let averageArr = arr => {
+  let sum = arr.reduce((a, b) => {
+    return a + b;
+  });
+
+  return sum / arr.length;
 };
 
 module.exports = (_latitude, _longitude, _data) => {
-  let point = (_latitude + _longitude) / 2;
+  let convertedArmag = _data[0];
+  let convertedArmagPM = _data[1]; //pms
 
   let curDate = new Date();
   let curHours = curDate.getHours();
   let curTime = curHours == 24 ? 0 : curHours;
   let hourElem = 48 + parseInt(curTime);
 
-  let locations = [];
-  let locations2 = [];
-  let locations3 = [];
-  let choosenStationsID = [];
-
   let pm10 = [];
   let humidity = [];
   let temperature = [];
 
-  let convertedArmag = _data[0];
-  let convertedArmagPM = _data[1];
+  let choosenStationsID = choosenStations(_latitude, _longitude);
 
   let armagEntity = convertedArmag.document.station;
   let armagEntityPM = convertedArmagPM.document.station;
 
-  stations.forEach((e, i) => {
-    let curStation = armagEntity[i].substance;
-    let curStationPM = armagEntityPM[i].substance;
+  choosenStationsID.forEach((e, i) => {
+    let curStation = armagEntity[e].substance;
+    let curStationPM = armagEntityPM[e].substance;
     let splited = [];
 
     if (curStation) {
@@ -40,25 +38,21 @@ module.exports = (_latitude, _longitude, _data) => {
         if (ce._attributes.type == "WILG") {
           splited = ce._text.split("|");
 
-          locations2.push(locationMath(e));
           humidity.push(getDataFromHour(splited, hourElem));
         }
         if (ce._attributes.type == "TEMP") {
           splited = ce._text.split("|");
 
-          locations.push(locationMath(e));
-          choosenStationsID.push(i);
           temperature.push(getDataFromHour(splited, hourElem));
         }
       });
     }
 
     if (typeof curStationPM != "undefined" && typeof curStationPM != undefined) {
-      for (let i = 0; i < curStationPM.length; i++) {
-        if (curStationPM[i]._attributes.type == "PM10") {
-          splited = curStationPM[i]._text.split("|");
+      for (let index = 0; index < curStationPM.length; index++) {
+        if (curStationPM[index]._attributes.type == "PM10") {
+          splited = curStationPM[index]._text.split("|");
 
-          locations3.push(locationMath(e));
           pm10.push(getDataFromHour(splited, hourElem));
         }
       }
@@ -66,10 +60,10 @@ module.exports = (_latitude, _longitude, _data) => {
   });
 
   responseModel.stations = choosenStationsID;
-  responseModel.pm10 = getLocationTemperature(locations3, pm10, point);
-  responseModel.humidity = getLocationTemperature(locations2, humidity, point);
-  responseModel.temperature = getLocationTemperature(locations, temperature, point);
-  responseModel.type = "model";
+  responseModel.pm10 = pm10.length > 1 ? averageArr(pm10) : "";
+  responseModel.humidity = humidity.length > 1 ? averageArr(humidity) : 0;
+  responseModel.temperature = temperature.length > 1 ? averageArr(temperature) : 0;
+  responseModel.type = "average";
 
   return responseModel;
 };
