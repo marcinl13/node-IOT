@@ -1,6 +1,4 @@
-let choosenStations = require("../chooseStations");
-let getDataFromHour = require("../getDataFromHour");
-let average = require("../average");
+const { chooseStations, getDataFromHour, arrayAverage } = require("../assets/common");
 
 module.exports = (_latitude, _longitude, _data) => {
   let convertedArmag = _data[0];
@@ -15,7 +13,7 @@ module.exports = (_latitude, _longitude, _data) => {
   let humidity = [];
   let temperature = [];
 
-  let choosenStationsID = choosenStations(_latitude, _longitude);
+  let choosenStationsID = chooseStations(_latitude, _longitude);
 
   let armagEntity = convertedArmag.document.station;
   let armagEntityPM = convertedArmagPM.document.station;
@@ -52,9 +50,9 @@ module.exports = (_latitude, _longitude, _data) => {
   });
 
   let obj = {
-    humidity: humidity.length > 1 ? average(humidity) : 0,
-    temperature: temperature.length > 1 ? average(temperature) : 0,
-    pm10: pm10.length > 1 ? average(pm10) : "",
+    humidity: humidity.length > 1 ? arrayAverage(humidity) : 0,
+    temperature: temperature.length > 1 ? arrayAverage(temperature) : 0,
+    pm10: pm10.length > 1 ? arrayAverage(pm10) : "",
     stations: choosenStationsID,
     type: "average"
   };

@@ -1,6 +1,5 @@
-let stations = require("../stationList");
-let getDataFromHour = require("../getDataFromHour");
-let getLocationTemperature = require("./getLocationTemperature");
+const { stationsList, getDataFromHour, getLocationTemperature } = require("../assets/common");
+let stations = stationsList;
 
 let locationMath = _stationCords => {
   return (_stationCords[0] + _stationCords[1]) / 2;

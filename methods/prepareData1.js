@@ -1,6 +1,4 @@
-let getDataFromHour = require("../getDataFromHour");
-let closestStations = require("./closestStations");
-
+const { getDataFromHour, closestStations } = require("../assets/common");
 const INVALID_DATA = -999;
 
 module.exports = (_latitude, _longitude, _data) => {
