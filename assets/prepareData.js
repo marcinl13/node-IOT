@@ -1,9 +1,7 @@
 "use strict";
 const { parseRemoteXML } = require("./common");
 
-const calculateData = require("../methods/prepareData1");
-const calculateData2 = require("../methods/prepareData2");
-const calculateData3 = require("../methods/prepareData3");
+const merged = require("../methods/merged");
 
 const prepareData = async (latitude, longitude, isDebug = false) => {
   const armaagData = await Promise.all([
@@ -11,14 +9,16 @@ const prepareData = async (latitude, longitude, isDebug = false) => {
     parseRemoteXML("https://armaag.gda.pl/data/xml/stacje_porownawcze.xml") // pm10
   ]);
 
-  var posibility1 = calculateData(latitude, longitude, armaagData, isDebug); // closest
-  var posibility2 = calculateData2(latitude, longitude, armaagData, isDebug); // model
-  var posibility3 = calculateData3(latitude, longitude, armaagData, isDebug); // average
+  var posibility4 = merged(latitude, longitude, armaagData, isDebug);
+
+  let closest = posibility4[1];
+  let model = posibility4[0];
+  let average = posibility4[2];
 
   return {
-    closest: posibility1,
-    model: posibility2,
-    average: posibility3
+    closest: closest.closest,
+    model: model.model,
+    average: average.average
   };
 };
 

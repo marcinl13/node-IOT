@@ -123,6 +123,11 @@ const getCurTime = (_curHours) => {
   return hourElem;
 };
 
+const locationMath = _stationCords => {
+  return (_stationCords[0] + _stationCords[1]) / 2;
+};
+
+
 module.exports = {
   stationsList,
   arrayAverage,
@@ -133,5 +138,6 @@ module.exports = {
   getLocationTemperature,
   closestStations,
   chooseStations,
-  getCurTime
+  getCurTime,
+  locationMath
 };
