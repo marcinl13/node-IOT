@@ -114,14 +114,15 @@ const chooseStations = (_x, _y) => {
   return stationList;
 };
 
-const getCurTime = () => {
+const getCurTime = (_curHours) => {
   let curDate = new Date();
   let curHours = curDate.getHours();
   let curTime = curHours == 24 ? 0 : curHours;
   let hourElem = 48 + parseInt(curTime);
 
-  return houhourElem;
+  return hourElem;
 };
+
 module.exports = {
   stationsList,
   arrayAverage,
