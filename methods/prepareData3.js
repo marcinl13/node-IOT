@@ -1,6 +1,6 @@
 const { chooseStations, getDataFromHour, arrayAverage } = require("../assets/common");
 
-module.exports = (_latitude, _longitude, _data) => {
+module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
   let convertedArmag = _data[0];
   let convertedArmagPM = _data[1]; //pms
 
@@ -54,6 +54,8 @@ module.exports = (_latitude, _longitude, _data) => {
     temperature: temperature.length > 1 ? arrayAverage(temperature) : 0,
     pm10: pm10.length > 1 ? arrayAverage(pm10) : ""
   };
+
+  if (_isDebug) obj.stations = choosenStationsID;
 
   return obj;
 };

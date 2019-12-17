@@ -5,7 +5,7 @@ let locationMath = _stationCords => {
   return (_stationCords[0] + _stationCords[1]) / 2;
 };
 
-module.exports = (_latitude, _longitude, _data) => {
+module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
   let point = (_latitude + _longitude) / 2;
 
   let curDate = new Date();
@@ -68,6 +68,8 @@ module.exports = (_latitude, _longitude, _data) => {
     temperature: getLocationTemperature(locations, temperature, point),
     pm10: getLocationTemperature(locations3, pm10, point)
   };
+  
+  if (_isDebug) response.stations = choosenStationsID;
 
   return response;
 };

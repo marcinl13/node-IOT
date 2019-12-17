@@ -1,7 +1,7 @@
 const { getDataFromHour, closestStations } = require("../assets/common");
 const INVALID_DATA = -999;
 
-module.exports = (_latitude, _longitude, _data) => {
+module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
   let convertedArmag = _data[0];
   let convertedArmagPM = _data[1]; //pms
 
@@ -54,6 +54,8 @@ module.exports = (_latitude, _longitude, _data) => {
     temperature: temperature,
     pm10: pm10
   };
+
+  if (_isDebug) response.stations = choosenStationsID;
 
   if (response.temperature <= INVALID_DATA || response.humidity <= INVALID_DATA) return new Error("Brak danych");
 
