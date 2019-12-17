@@ -66,9 +66,7 @@ module.exports = (_latitude, _longitude, _data) => {
   let response = {
     humidity: getLocationTemperature(locations2, humidity, point),
     temperature: getLocationTemperature(locations, temperature, point),
-    pm10: getLocationTemperature(locations3, pm10, point),
-    stations: choosenStationsID,
-    type: "model"
+    pm10: getLocationTemperature(locations3, pm10, point)
   };
 
   return response;

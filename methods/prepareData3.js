@@ -52,9 +52,7 @@ module.exports = (_latitude, _longitude, _data) => {
   let obj = {
     humidity: humidity.length > 1 ? arrayAverage(humidity) : 0,
     temperature: temperature.length > 1 ? arrayAverage(temperature) : 0,
-    pm10: pm10.length > 1 ? arrayAverage(pm10) : "",
-    stations: choosenStationsID,
-    type: "average"
+    pm10: pm10.length > 1 ? arrayAverage(pm10) : ""
   };
 
   return obj;

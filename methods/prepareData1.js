@@ -52,9 +52,7 @@ module.exports = (_latitude, _longitude, _data) => {
   let response = {
     humidity: humidity,
     temperature: temperature,
-    pm10: pm10,
-    stations: choosenStationsID,
-    type: "closest"
+    pm10: pm10
   };
 
   if (response.temperature <= INVALID_DATA || response.humidity <= INVALID_DATA) return new Error("Brak danych");
