@@ -3,7 +3,7 @@ const { parseRemoteXML } = require("./common");
 let checkStatus = async (req, res, next) => {
   let acceptableAmountOfStations = 9;
 
-  await Promise.all([
+  Promise.all([
     parseRemoteXML("https://armaag.gda.pl/data/xml/weather.xml"), // temperature & humidity
     parseRemoteXML("https://armaag.gda.pl/data/xml/stacje_porownawcze.xml") // pm10
   ])
