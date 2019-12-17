@@ -95,8 +95,8 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
     }
     if (type == "closest") {
       prefab = {
-        humidity: humidity.length > 1 ? humidity[0] : 0,
-        temperature: temperature.length > 1 ? temperature[0] : 0,
+        humidity: humidity.length > 0 ? humidity[0] : 0,
+        temperature: temperature.length > 0 ? temperature[0] : 0,
         pm10: pm10.length > 1 ? pm10[0] : ""
       };
 
