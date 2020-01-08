@@ -4,15 +4,15 @@ const convert = require("xml-js");
 const INVALID_DATA = -999;
 
 const stationsList = [
-  [54.35678, 18.62882], // Gdańsk Śródmieście
-  [54.3743, 18.70246], // Gdańsk Stogi
-  [54.39802, 18.66587], // Gdańsk Nowy Port
-  [54.56266, 18.48892], // Gdynia Pogorze
-  [54.32884, 18.55559], // Gdańsk Szadołki
-  [54.43333, 18.5811], // Sopot
-  [54.37875, 18.61947], // Gdańsk Wrzeszcz
-  [54.46696, 18.4634], // Gdynia Śródmieście
-  [54.47429, 18.45881] // Gdynia Dąbrowa
+  [54.35678, 18.62882], // Gdańsk Śródmieście 0
+  [54.3743, 18.70246], // Gdańsk Stogi  1
+  [54.39802, 18.66587], // Gdańsk Nowy Port 2
+  [54.56266, 18.48892], // Gdynia Pogorze 3
+  [54.32884, 18.55559], // Gdańsk Szadołki  4
+  [54.43333, 18.5811], // Sopot 5
+  [54.37875, 18.61947], // Gdańsk Wrzeszcz  6
+  [54.46696, 18.4634], // Gdynia Śródmieście 7
+  [54.47429, 18.45881] // Gdynia Dąbrowa 8
 ];
 
 const arrayAverage = array => {
@@ -114,7 +114,7 @@ const chooseStations = (_x, _y) => {
   return stationList;
 };
 
-const getCurTime = (_curHours) => {
+const getCurTime = _curHours => {
   let curDate = new Date();
   let curHours = curDate.getHours();
   let curTime = curHours == 24 ? 0 : curHours;
@@ -127,6 +127,48 @@ const locationMath = _stationCords => {
   return (_stationCords[0] + _stationCords[1]) / 2;
 };
 
+const weightedAverage = (_triangleStations, _values, _customPoint) => {
+  let topToPointDistance = getDistanceFromLatLonInKm(
+    _customPoint[0],
+    _customPoint[1],
+    stationsList[_triangleStations[0]]
+  );
+  let leftToPointDistance = getDistanceFromLatLonInKm(
+    _customPoint[0],
+    _customPoint[1],
+    stationsList[_triangleStations[1]]
+  );
+  let rightToPointDistance = getDistanceFromLatLonInKm(
+    _customPoint[0],
+    _customPoint[1],
+    stationsList[_triangleStations[2]]
+  );
+
+  let customPointTemp =
+    (topToPointDistance * _values[0] + leftToPointDistance * _values[1] + rightToPointDistance * _values[2]) /
+    (topToPointDistance + leftToPointDistance + rightToPointDistance);
+
+  return customPointTemp;
+};
+
+const chooseTriangle = (_latitude, _longitude) => {
+  let availableTriangles = [
+    [3, 8, 7],
+    [7, 8, 5],
+    [7, 5, 2],
+    [5, 8, 4],
+    [5, 6, 4],
+    [6, 0, 4],
+    [0, 4, 1],
+    [6, 0, 1],
+    [5, 6, 2],
+    [2, 6, 1]
+  ];
+
+  console.log(chooseStations(_latitude, _longitude));
+
+  return chooseStations(_latitude, _longitude);
+};
 
 module.exports = {
   stationsList,
@@ -139,5 +181,7 @@ module.exports = {
   closestStations,
   chooseStations,
   getCurTime,
-  locationMath
+  locationMath,
+  chooseTriangle,
+  weightedAverage
 };

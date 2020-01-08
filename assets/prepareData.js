@@ -14,11 +14,13 @@ const prepareData = async (latitude, longitude, isDebug = false) => {
   let closest = posibility4[1];
   let model = posibility4[0];
   let average = posibility4[2];
+  let improved = posibility4[3];
 
   return {
     closest: closest.closest,
     model: model.model,
-    average: average.average
+    average: average.average,
+    improved: improved.improved
   };
 };
 

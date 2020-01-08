@@ -6,7 +6,9 @@ const {
   getCurTime,
   arrayAverage,
   getLocationTemperature,
-  locationMath
+  locationMath,
+  chooseTriangle,
+  weightedAverage
 } = require("../assets/common");
 
 module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
@@ -27,7 +29,8 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
   let stations = [
     { type: "model", list: stationsList }, // model
     { type: "closest", list: closestStation }, //closest:
-    { type: "average", list: chooseStations(_latitude, _longitude) } //average:
+    { type: "average", list: chooseStations(_latitude, _longitude) }, //average:
+    { type: "improved", list: chooseTriangle(_latitude, _longitude) } //triangle:
   ];
 
   stations.forEach((elem, index) => {
@@ -114,6 +117,20 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
       if (_isDebug) prefab.stations = elem.list;
 
       response.push({ average: prefab });
+    }
+    if (type == "improved") {
+      // console.log("improved", "humidity", humidity, "temperature", temperature, "pm10", pm10);
+      let point2 = [_latitude, _longitude];
+      
+      prefab = {
+        humidity2: humidity.length > 1 ? weightedAverage(elem.list, humidity, point2) : 0,
+        temperature2: humidity.length > 1 ? weightedAverage(elem.list, temperature, point2) : 0,
+        pm10: pm10.length > 1 ? weightedAverage(elem.list, pm10, point2) : ""
+      };
+
+      if (_isDebug) prefab.stations = elem.list;
+
+      response.push({ improved: prefab });
     }
   });
 
