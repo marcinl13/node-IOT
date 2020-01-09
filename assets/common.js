@@ -151,23 +151,99 @@ const weightedAverage = (_triangleStations, _values, _customPoint) => {
   return customPointTemp;
 };
 
+const createVector = (_x, _y) => {
+  return { x: _x, y: _y };
+};
+
+const mapStationPoints = () => {
+  let stations = [...stationsList];
+
+  return stations.map(p => {
+    return createVector(p[1], p[0]);
+  });
+};
+
+const ptInTriangle = (p, p0, p1, p2) => {
+  const A = (1 / 2) * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
+  const sign = A < 0 ? -1 : 1;
+  const s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
+  const t = (p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y) * sign;
+
+  return s > 0 && t > 0 && s + t < 2 * A * sign;
+};
+
+const area = (p0, p1, p2) => {
+  return (1 / 2) * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
+};
+
+const pointDistance = (_p0, _p1) => {
+  const a = _p0.x - _p1.x;
+  const b = _p0.y - _p1.y;
+
+  return Math.sqrt(a * a + b * b);
+};
+
+const smallestTriangle = (point, triangles) => {
+  const ts = triangles.map(t => {
+    return {
+      area: Math.abs(area(...t)),
+      distsum: pointDistance(point, t[0]) + pointDistance(point, t[1]) + pointDistance(point, t[2]),
+      triangle: t
+    };
+  });
+
+  ts.sort((a, b) => b.distsum - a.distsum).reverse();
+
+  if (ts && ts[0]) return ts[0];
+};
+
+const dynamicTriangle = ({ lat, long }) => {
+  let points = mapStationPoints();
+  let triangles = [];
+
+  //point searched
+  // let searchedPoint = createVector(18.52882, 54.37); // example
+  let searchedPoint = createVector(long, lat);
+
+  for (let i = 0; i < points.length; i++) {
+    const p0 = points[i];
+
+    for (let j = i + 1; j < points.length; j++) {
+      const p1 = points[j];
+
+      if (i !== j) {
+        for (let k = j + 1; k < points.length; k++) {
+          const p2 = points[k];
+
+          if (j !== k && ptInTriangle(searchedPoint, p0, p1, p2)) {
+            triangles.push([p0, p1, p2]);
+          }
+        }
+      }
+    }
+  }
+
+  let smallest = smallestTriangle(searchedPoint, triangles);
+
+  let choosenStationsFromTriangle = [];
+  if (smallest) {
+    let t = smallest.triangle;
+
+    points.forEach((e, i) => {
+      if (
+        (e.x === t[0].x && e.y === t[0].y) ||
+        (e.x === t[1].x && e.y === t[1].y) ||
+        (e.x === t[2].x && e.y === t[2].y)
+      )
+        choosenStationsFromTriangle.push(i);
+    });
+  }
+
+  return choosenStationsFromTriangle;
+};
+
 const chooseTriangle = (_latitude, _longitude) => {
-  let availableTriangles = [
-    [3, 8, 7],
-    [7, 8, 5],
-    [7, 5, 2],
-    [5, 8, 4],
-    [5, 6, 4],
-    [6, 0, 4],
-    [0, 4, 1],
-    [6, 0, 1],
-    [5, 6, 2],
-    [2, 6, 1]
-  ];
-
-  console.log(chooseStations(_latitude, _longitude));
-
-  return chooseStations(_latitude, _longitude);
+  return dynamicTriangle({ lat: _latitude, long: _longitude });
 };
 
 module.exports = {
@@ -183,5 +259,6 @@ module.exports = {
   getCurTime,
   locationMath,
   chooseTriangle,
-  weightedAverage
+  weightedAverage,
+  dynamicTriangle
 };
