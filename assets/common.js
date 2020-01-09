@@ -197,25 +197,20 @@ const smallestTriangle = (point, triangles) => {
   if (ts && ts[0]) return ts[0];
 };
 
-const dynamicTriangle = ({ lat, long }) => {
-  let points = mapStationPoints();
+const generateTriangles = (_points, _searchedPoint) => {
   let triangles = [];
 
-  //point searched
-  // let searchedPoint = createVector(18.52882, 54.37); // example
-  let searchedPoint = createVector(long, lat);
+  for (let i = 0; i < _points.length; i++) {
+    const p0 = _points[i];
 
-  for (let i = 0; i < points.length; i++) {
-    const p0 = points[i];
-
-    for (let j = i + 1; j < points.length; j++) {
-      const p1 = points[j];
+    for (let j = i + 1; j < _points.length; j++) {
+      const p1 = _points[j];
 
       if (i !== j) {
-        for (let k = j + 1; k < points.length; k++) {
-          const p2 = points[k];
+        for (let k = j + 1; k < _points.length; k++) {
+          const p2 = _points[k];
 
-          if (j !== k && ptInTriangle(searchedPoint, p0, p1, p2)) {
+          if (j !== k && ptInTriangle(_searchedPoint, p0, p1, p2)) {
             triangles.push([p0, p1, p2]);
           }
         }
@@ -223,7 +218,38 @@ const dynamicTriangle = ({ lat, long }) => {
     }
   }
 
-  let smallest = smallestTriangle(searchedPoint, triangles);
+  return triangles;
+};
+
+const dynamicTriangles = ({ lat, long }) => {
+  let points = mapStationPoints();
+
+  // let curLocation = createVector(18.52882, 54.37); // example
+  let curLocation = createVector(long, lat);
+
+  let triangles = generateTriangles(points, curLocation);
+
+  //if triangles empty set point to nearest station
+  if (triangles.length < 1) {
+    let closest = stationsList[closestStations(lat, long)];
+    closest = createVector(closest[1], closest[0]);
+
+    let dist = pointDistance(curLocation, closest);
+
+    console.log("distance", dist, dist >= 0 && dist <= 0.5);
+
+    if (dist >= 0 && dist <= 0.5) {
+      triangles = generateTriangles(points, closest);
+    }
+  }
+
+  return { curLocation, triangles, points };
+};
+
+const chooseTriangle = (_latitude, _longitude) => {
+  const { curLocation, triangles, points } = dynamicTriangles({ lat: _latitude, long: _longitude });
+
+  let smallest = smallestTriangle(curLocation, triangles);
 
   let choosenStationsFromTriangle = [];
   if (smallest) {
@@ -242,10 +268,6 @@ const dynamicTriangle = ({ lat, long }) => {
   return choosenStationsFromTriangle;
 };
 
-const chooseTriangle = (_latitude, _longitude) => {
-  return dynamicTriangle({ lat: _latitude, long: _longitude });
-};
-
 module.exports = {
   stationsList,
   arrayAverage,
@@ -258,7 +280,8 @@ module.exports = {
   chooseStations,
   getCurTime,
   locationMath,
-  chooseTriangle,
   weightedAverage,
-  dynamicTriangle
+  chooseTriangle,
+  dynamicTriangles,
+  smallestTriangle
 };
