@@ -8,7 +8,9 @@ const {
   getLocationTemperature,
   locationMath,
   chooseTriangle,
-  weightedAverage
+  weightedAverage,
+  triangularInterpolation,
+  createVector
 } = require("../assets/common");
 
 module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
@@ -86,8 +88,6 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
     var prefab = {};
 
     if (type == "model") {
-      // console.log("model", "humidity", humidity, "temperature", temperature, "pm10", pm10);
-
       prefab = {
         humidity: getLocationTemperature(locations1, humidity, point),
         temperature: getLocationTemperature(locations2, temperature, point),
@@ -121,13 +121,12 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
       response.push({ average: prefab });
     }
     if (type == "trangle") {
-      // console.log("improved", "humidity", humidity, "temperature", temperature, "pm10", pm10);
-      let point2 = [_latitude, _longitude];
+      let point3 = createVector(_longitude, _latitude);
 
       prefab = {
-        humidity: humidity.length > 1 ? weightedAverage(elem.list, humidity, point2) : 0,
-        temperature: humidity.length > 1 ? weightedAverage(elem.list, temperature, point2) : 0,
-        pm10: pm10.length === 3 ? weightedAverage(elem.list, pm10, point2) : ""
+        humidity: humidity.length == 3 ? triangularInterpolation(elem.list, humidity, point3) : 0,
+        temperature: temperature.length == 3 ? triangularInterpolation(elem.list, temperature, point3) : 0,
+        pm10: pm10.length === 3 ? triangularInterpolation(elem.list, pm10, point2) : ""
       };
 
       if (_isDebug) prefab.stations = elem.list;

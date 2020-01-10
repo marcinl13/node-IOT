@@ -231,12 +231,14 @@ const dynamicTriangles = ({ lat, long }) => {
 
   //if triangles empty set point to nearest station
   if (triangles.length < 1) {
+    console.log("set point to nearest station");
+
     let closest = stationsList[closestStations(lat, long)];
     closest = createVector(closest[1], closest[0]);
 
     let dist = pointDistance(curLocation, closest);
 
-    console.log("distance", dist, dist >= 0 && dist <= 0.5);
+    // console.log("distance", dist, dist >= 0 && dist <= 0.5);
 
     if (dist >= 0 && dist <= 0.5) {
       triangles = generateTriangles(points, closest);
@@ -268,6 +270,64 @@ const chooseTriangle = (_latitude, _longitude) => {
   return choosenStationsFromTriangle;
 };
 
+const calcBarycentricWeights = (_x, _y, _v1x, _v1y, _v2x, _v2y, _v3x, _v3y) => {
+  let w_v1 =
+    (_x * (_v3y - _v2y) + _v2x * (_y - _v3y) + _v3x * (_v2y - _y)) /
+    (_v1x * (_v3y - _v2y) + _v2x * (_v1y - _v3y) + _v3x * (_v2y - _v1y));
+
+  let w_v2 =
+    -(_x * (_v3y - _v1y) + _v1x * (_y - _v3y) + _v3x * (_v1y - _y)) /
+    (_v1x * (_v3y - _v2y) + _v2x * (_v1y - _v3y) + _v3x * (_v2y - _v1y));
+
+  let w_v3 = 1.0 - w_v1 - w_v2;
+
+  return [w_v1, w_v2, w_v3];
+};
+
+const calcNaiveWeights = (_x, _y, _v1x, _v1y, _v2x, _v2y, _v3x, _v3y) => {
+  let d_v1 = Math.sqrt(Math.pow(_x - _v1x, 2) + Math.pow(_y - _v1y, 2));
+  let d_v2 = Math.sqrt(Math.pow(_x - _v2x, 2) + Math.pow(_y - _v2y, 2));
+  let d_v3 = Math.sqrt(Math.pow(_x - _v3x, 2) + Math.pow(_y - _v3y, 2));
+
+  if (d_v1 == 0.0) {
+    return [1, 0, 0];
+  } else if (d_v2 == 0.0) {
+    return [0, 1, 0];
+  } else if (d_v3 == 0.0) {
+    return [0, 0, 1];
+  }
+
+  let w_v1 = 1.0 / d_v1;
+  let w_v2 = 1.0 / d_v2;
+  let w_v3 = 1.0 / d_v3;
+
+  let w_sum = w_v1 + w_v2 + w_v3;
+
+  w_v1 /= w_sum;
+  w_v2 /= w_sum;
+  w_v3 /= w_sum;
+
+  return [w_v1, w_v2, w_v3];
+};
+
+const triangularInterpolation = (_stationsID, _pointValues, { x, y }) => {
+console.log(_pointValues)
+
+  let map = mapStationPoints();
+
+  let v1 = map[_stationsID[0]];
+  let v2 = map[_stationsID[1]];
+  let v3 = map[_stationsID[2]];
+
+  let weights = calcBarycentricWeights(x, y, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+
+  let w_v1 = weights[0] * _pointValues[0];
+  let w_v2 = weights[1] * _pointValues[1];
+  let w_v3 = weights[2] * _pointValues[2];
+
+  return w_v1 + w_v2 + w_v3;
+};
+
 module.exports = {
   stationsList,
   arrayAverage,
@@ -283,5 +343,9 @@ module.exports = {
   weightedAverage,
   chooseTriangle,
   dynamicTriangles,
-  smallestTriangle
+  smallestTriangle,
+  calcBarycentricWeights,
+  calcNaiveWeights,
+  triangularInterpolation,
+  createVector
 };
