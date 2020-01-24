@@ -126,7 +126,7 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
       prefab = {
         humidity: humidity.length == 3 ? triangularInterpolation(elem.list, humidity, point3) : 0,
         temperature: temperature.length == 3 ? triangularInterpolation(elem.list, temperature, point3) : 0,
-        pm10: pm10.length === 3 ? triangularInterpolation(elem.list, pm10, point2) : ""
+        pm10: pm10.length === 3 ? triangularInterpolation(elem.list, pm10, point3) : ""
       };
 
       if (_isDebug) prefab.stations = elem.list;
