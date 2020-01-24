@@ -32,7 +32,7 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
     { type: "model", list: stationsList }, // model
     { type: "closest", list: closestStation }, //closest:
     { type: "average", list: chooseStations(_latitude, _longitude) }, //average:
-    { type: "trangle", list: chooseTriangle(_latitude, _longitude) } //triangle dynamic search
+    { type: "triangle", list: chooseTriangle(_latitude, _longitude) } //triangle dynamic search
   ];
 
   stations.forEach((elem, index) => {
@@ -120,7 +120,7 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
 
       response.push({ average: prefab });
     }
-    if (type == "trangle") {
+    if (type == "triangle") {
       let point3 = createVector(_longitude, _latitude);
 
       prefab = {
@@ -131,7 +131,7 @@ module.exports = (_latitude, _longitude, _data, _isDebug = false) => {
 
       if (_isDebug) prefab.stations = elem.list;
 
-      response.push({ trangle: prefab });
+      response.push({ triangle: prefab });
     }
   });
 
